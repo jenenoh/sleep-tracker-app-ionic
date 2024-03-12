@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Log Sleep</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-toolbar>
+    <ion-label color="medium">Most Recent Sleep</ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="viewAllLogs()">View All<ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-list *ngIf="mostRecentLog">
+    <ion-item-sliding *ngFor="let log of logs; let i = index" #slidingItem>
+      <ion-item>
+        <ion-card color="light">
+          <ion-card-header>
+            <ion-card-title>{{ log.summaryString() }}</ion-card-title>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">  
+              <ion-card-subtitle>{{ log.getSleepStart() | date: 'EEE, MMM d' }}</ion-card-subtitle>
+              <ion-badge *ngIf="log.sleepQuality" class="sleep-quality-badge" [color]="getSleepQualityColor(log.sleepQuality)">
+                {{ log.sleepQuality }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="time-info">
+              <ion-icon name="bed-outline"></ion-icon>
+              <span><small class="time-description">Went to sleep at</small> {{ mostRecentLog.getSleepStart() | date: 'shortTime' }}</span>
+            </div>
+            <div class="time-info">
+              <ion-icon name="sunny-outline"></ion-icon>
+              <span><small class="time-description">Woke up at</small> {{ mostRecentLog.getSleepEnd() | date: 'shortTime' }}</span>
+            </div>
+          </ion-card-content>
+          <!-- <p *ngIf="sleepinessLoggedForDate">Sleepiness: {{ sleepinessLevel }}</p> -->
+        </ion-card>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteLog(log, slidingItem)">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <form [formGroup]="logForm">
+    <ion-item>
+      <ion-label>Bedtime</ion-label>
+      <ion-datetime-button datetime="bedtimeDatetime"></ion-datetime-button>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>Awake</ion-label>
+      <ion-datetime-button datetime="awakeDatetime"></ion-datetime-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Sleep Quality</ion-label>
+      <div class="sleep-quality-button-container">
+        <ion-button class="sleep-quality-button" [disabled]="selectedSleepQuality === 'Good'" color= "success" (click)="setSleepQuality('Good')">
+          GOOD
+        </ion-button>
+        <ion-button class="sleep-quality-button" [disabled]="selectedSleepQuality === 'Okay'" color= "warning" (click)="setSleepQuality('Okay')">
+          OKAY
+        </ion-button>
+        <ion-button class="sleep-quality-button" [disabled]="selectedSleepQuality === 'Bad'" color= "danger" (click)="setSleepQuality('Bad')">
+          BAD
+        </ion-button>
+      </div>
+    </ion-item>
+  </form>
+<ion-content>
+
+<ion-toast *ngIf="showSuccessMessage" color="success" message="Successfully logged!" duration="3000"></ion-toast>
+
+<ion-modal keepContentsMounted="true">
+  <ng-template>
+    <ion-datetime id="bedtimeDatetime"
+                  presentation="date-time"
+                  [(ngModel)]="logForm.controls['inBedTime'].value"
+                  (ionChange)="logForm.controls['inBedTime'].setValue($event.detail.value)">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+<ion-modal keepContentsMounted="true">
+  <ng-template>
+    <ion-datetime id="awakeDatetime"
+                  presentation="date-time"
+                  [(ngModel)]="logForm.controls['awakeTime'].value"
+                  (ionChange)="logForm.controls['awakeTime'].setValue($event.detail.value)">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="addLog()">Add Log</ion-button>
+    <ion-button expand="block" (click)="cancelLog()" color="light">Cancel Log</ion-button>
+  </ion-toolbar>
+</ion-footer>

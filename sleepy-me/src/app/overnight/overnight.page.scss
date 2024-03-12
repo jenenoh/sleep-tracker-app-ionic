@@ -1,0 +1,42 @@
+.time-info {
+    display: flex;
+    align-items: left;
+}
+  
+
+.time-info ion-icon {
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+.time-description {
+    font-size: 0.9em; /* Adjust the size as needed */
+}
+
+.sleep-quality-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.sleep-quality-badge {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    margin-left: auto;
+    padding: 0.5em;
+}
+
+.sleep-quality-button-container {
+    display: flex;
+    justify-content: space-between; /* Or 'space-between' if you prefer */
+}
+
+ion-card {
+    width: 100%;
+}
+
+
+

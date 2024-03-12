@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-title color="dark">Log Sleepiness</ion-title>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-toolbar>
+    <ion-label color="medium">Most Recent Sleepiness Log</ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="viewAllLogs()">View All<ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>   
+  <ion-list *ngIf="logs.length > 0">
+    <ion-item-sliding *ngFor="let log of logs; let i = index" #slidingItem>
+      <ion-item>
+        <ion-card color="light">
+          <ion-card-header>
+            <ion-card-title>
+              Sleepiness Level: {{ log.sleepinessLevel }}
+            </ion-card-title>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+              <ion-card-subtitle>{{ log.dateTime | date: 'EEE, MMM d, h:mm a' }}</ion-card-subtitle>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div>
+              <ion-icon name="chatbubble-outline"></ion-icon>
+              <span *ngIf="log.comments"> {{ log.comments }}</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteLog(log, slidingItem)">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  
+  <form [formGroup]="logForm">
+    <ion-item>
+      <ion-label>Current Date</ion-label>
+      <ion-datetime-button datetime="dateTime"></ion-datetime-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sleepiness Level</ion-label>
+      <ion-radio-group formControlName="sleepinessLevel">
+        <ion-row>
+          <ion-col size="12" *ngFor="let level of sleepinessLevels">
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                <ion-icon slot="start" [name]="level.value === 1 ? 'happy-outline' : (level.value === 7 ? 'sad-outline' : 'remove-outline')"></ion-icon>
+                <ion-badge color="primary" slot="end">{{ level.value }}</ion-badge>
+                {{ level.text }}
+              </ion-label>
+              <ion-radio slot="start" [value]="level.value"></ion-radio>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-radio-group>
+    </ion-item>
+    <ion-item>
+      <ion-label>Comments (Optional)</ion-label>
+      <ion-textarea formControlName="comments"></ion-textarea>
+    </ion-item>
+  </form>
+</ion-content>
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime id="dateTime"
+                  presentation="date-time"
+                  [(ngModel)]="logForm.controls['dateTime'].value"
+                  (ionChange)="logForm.controls['dateTime'].setValue($event.detail.value)">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="addLog()">Add Log</ion-button>
+    <ion-button expand="block" (click)="cancelLog()" color="light">Cancel Log</ion-button>
+  </ion-toolbar>
+</ion-footer>

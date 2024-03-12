@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Welcome to Sleepy-Me Tracker</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title size="large">Dashboard</ion-title>
+    </ion-toolbar>
+  </ion-header> 
+  <div *ngIf="mostRecentOvernightLog">
+    <ion-item>
+      <ion-card color="light">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="moon-outline"></ion-icon>
+              {{ mostRecentOvernightLog.summaryString() }}
+          </ion-card-title>
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+            <ion-card-subtitle>Most Recent Overnight Sleep</ion-card-subtitle>
+            <h1></h1>
+          </div>
+        </ion-card-header>
+      </ion-card>
+    </ion-item>
+  </div>
+  <div *ngIf="mostRecentSleepinessLog">
+    <ion-item>
+      <ion-card color="light">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="eye-outline"></ion-icon>
+            Sleepiness Level: {{ mostRecentSleepinessLog.sleepinessLevel }}
+          </ion-card-title>
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+            <ion-card-subtitle>Most Recent Sleepiness Level</ion-card-subtitle>
+            <h1></h1>
+          </div>
+        </ion-card-header>
+      </ion-card>
+    </ion-item>
+  </div>
+</ion-content>

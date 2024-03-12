@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>View All Logs</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()"><ion-icon name="arrow-back"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="logs.length > 0">
+    <ion-item-sliding *ngFor="let log of logs; let i = index" #slidingItem>
+      <ion-item>
+        <ion-card color="light">
+          <ion-card-header>
+            <ion-card-title>{{ log.summaryString() }}</ion-card-title>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+              <ion-card-subtitle>{{ log.getSleepStart() | date: 'EEE, MMM d' }}</ion-card-subtitle>
+              <ion-badge *ngIf="log.sleepQuality" class="sleep-quality-badge" [color]="getSleepQualityColor(log.sleepQuality)">
+                {{ log.sleepQuality }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="time-info">
+              <ion-icon name="bed-outline"></ion-icon>
+              <span><small class="time-description">Went to sleep at</small> {{ log.getSleepStart() | date: 'shortTime' }}</span>
+            </div>
+            <div class="time-info">
+              <ion-icon name="sunny-outline"></ion-icon>
+              <span><small class="time-description">Woke up at</small> {{ log.getSleepEnd() | date: 'shortTime' }}</span>
+            </div>
+            </ion-card-content>
+          </ion-card>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteLog(log, slidingItem)">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-text color="medium" *ngIf="logs?.length === 0">
+    No logs found.
+  </ion-text>
+</ion-content>
+
